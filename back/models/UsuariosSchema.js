@@ -2,13 +2,10 @@ import mongoose from "mongoose";
 import bcryptjs from "bcryptjs";
 
 const usuariosSchema = new mongoose.Schema({ 
-    nombre: {
+    username: {
         type: String,
         required: true,
-    },
-    apellido: {
-        type: String,
-        required: true,
+        unique: true,
     },
     email: {
         type: String,
@@ -24,7 +21,13 @@ const usuariosSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-});
+    profilePic: {
+        type: String,
+        required: false,
+        default:"",
+    },
+    }, { timestamps: true}
+);
 
 usuariosSchema.pre("save", async function(next) {
 

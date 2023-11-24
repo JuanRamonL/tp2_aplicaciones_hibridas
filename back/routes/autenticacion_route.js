@@ -1,30 +1,19 @@
-import express from 'express';
-import { login, register } from '../controllers/autenticacionController.js';
-import { body } from "express-validator";
-import { validacionesUsuarios } from '../middlewares/validacionesUsuarios.js';
+import express, { Router } from 'express';
+import { login, protectedRoute, register, refreshToken, logout} from '../controllers/AutenticacionController.js';
+import { registro, loginmd } from '../middlewares/validacioningreso.js';
+import { tokenUser } from '../middlewares/userToken.js';
 
 const router = express.Router();
 
+router.post('/register', registro, register);
 
-router.post('/register',
-    [ 
-        body('nombre').notEmpty().withMessage('El nombre es obligatorio'),
-        body('apellido').notEmpty().withMessage('El apellido es obligatorio'),
-        body('email').notEmpty().withMessage('El email es obligatorio'),
-        body('email').trim().isEmail().withMessage('El email no es válido'),
-        body('password').notEmpty().withMessage('El password es obligatorio'),
-        body('password').isLength({min: 6}).withMessage('El password debe tener al menos 6 caracteres')
-    ],
-    validacionesUsuarios,
-    register);
+router.post('/login', loginmd, login);
 
-router.post('/login',
-    [
-        body('email').notEmpty().withMessage('El email es obligatorio'),
-        body('email').trim().isEmail().withMessage('El email no es válido'),
-    ],
-    validacionesUsuarios, 
-    login);
+router.post('/logout', logout);
+
+router.get('/refresh', refreshToken)
+
+router.get('/protected',tokenUser, protectedRoute)
 
 
 export default router;
